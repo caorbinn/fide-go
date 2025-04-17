@@ -1,6 +1,5 @@
 package app.fide_go.service;
 
-import app.fide_go.model.Email;
 import app.fide_go.model.Offers;
 
 import java.util.Optional;

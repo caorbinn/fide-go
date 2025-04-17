@@ -18,6 +18,24 @@ public class PhoneController {
 
 
     /**
+     * @param phone Phone Object to insert
+     * @return Boolean
+     */
+    @PostMapping("/insert")
+    public ResponseEntity<Boolean> insertPhone(@RequestBody Phone phone){
+        ResponseEntity<Boolean> response;
+        Optional<Phone> phoneInserted = phoneService.insert(phone);
+
+        if(phoneInserted.isPresent()){
+            response = new ResponseEntity<>(true, HttpStatus.CREATED);
+        }else{
+            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    /**
      * @param phone Phone object to be updated
      * @return boolean, if user have been updated correctly return true
      */

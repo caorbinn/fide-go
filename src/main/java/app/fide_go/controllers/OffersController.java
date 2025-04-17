@@ -1,8 +1,6 @@
 package app.fide_go.controllers;
 
-import app.fide_go.model.Email;
 import app.fide_go.model.Offers;
-import app.fide_go.service.IEmailService;
 import app.fide_go.service.IOffersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

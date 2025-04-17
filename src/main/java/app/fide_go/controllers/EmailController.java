@@ -17,24 +17,23 @@ public class EmailController {
     private IEmailService emailService;
 
     /**
-     * @param email Email object to be insert
-     * @return boolean, if user have been updated correctly return true
+     * @param email Email Object to insert
+     * @return Boolean
      */
     @PostMapping("/insert")
     public ResponseEntity<Boolean> insertEmail(@RequestBody Email email){
         ResponseEntity<Boolean> response;
-        Optional<Email> emailFounded = emailService.findById(email.getId());
+        Optional<Email> emailInserted = emailService.insert(email);
 
-        if(emailFounded.isEmpty()){
-            emailService.insert(email).isPresent();
-            response = new ResponseEntity<>(true, HttpStatus.OK);
-
+        if(emailInserted.isPresent()){
+            response = new ResponseEntity<>(true, HttpStatus.CREATED);
         }else{
-            response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
         }
 
         return response;
     }
+
 
 
     /**

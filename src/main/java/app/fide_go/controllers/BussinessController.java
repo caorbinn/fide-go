@@ -1,7 +1,6 @@
 package app.fide_go.controllers;
 
 import app.fide_go.model.Bussiness;
-import app.fide_go.model.Email;
 import app.fide_go.service.IBussinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
