@@ -43,34 +43,44 @@ public class UserServiceImpl implements IUserService {
 
         if (profileUser != null && phoneUser != null && emailUser != null) {
             // Verificar si el teléfono y el correo electrónico ya existen
-            if (phoneDAO.findByPhoneNumber(phoneUser.getPhoneNumber()).isPresent() || emailDAO.findByEmail(emailUser.getEmail()).isPresent()) {
+            if (phoneDAO.findByPhoneNumber(phoneUser.getPhoneNumber()).isPresent()
+                    || emailDAO.findByEmail(emailUser.getEmail()).isPresent()) {
                 throw new RollBackException("The user " + user.getUsername() + " cannot be inserted into the database because the phone number or email already exists");
             }
 
             try {
-                // Insertar el perfil
-                Optional<Profile> profileInserted = profileService.insert(user.getProfile());
+                // Insertar perfil
+                Optional<Profile> profileInserted = profileService.insert(profileUser);
+                Optional<Phone> phoneInserted = phoneService.insert(phoneUser);
+                Optional<Email> emailInserted = emailService.insert(emailUser);
 
-                // Verificar si el perfil se insertó correctamente
-                if (profileInserted.isPresent()) {
-                    // Asignar el ID al usuario
+                if (profileInserted.isPresent() && phoneInserted.isPresent() && emailInserted.isPresent()) {
+
+                    // Asignar entidades persistidas al usuario
+                    user.setProfile(profileInserted.get());
+                    user.setPhone(phoneInserted.get());
+                    user.setEmail(emailInserted.get());
+
+                    // Asignar ID al usuario si no lo tiene
                     if (user.getId() == null) {
                         user.setId(UUID.randomUUID().toString());
                     }
 
-
-                    // Guardar el usuario en la base de datos
+                    // Guardar el usuario
                     return Optional.of(userDAO.save(user));
                 } else {
-                    throw new RollBackException("The user " + user.getUsername() + " cannot be inserted into the database because the profile could not be inserted");
+                    throw new RollBackException("One or more user-related objects could not be inserted");
                 }
+
             } catch (Exception e) {
                 throw new RollBackException("The user " + user.getUsername() + " cannot be inserted into the database because an error occurred: " + e.getMessage());
             }
+
         } else {
             throw new RollBackException("The user " + user.getUsername() + " cannot be inserted into the database because he/she must have a profile, email, and phone number");
         }
     }
+
 
 
     /**
