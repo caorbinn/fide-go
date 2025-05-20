@@ -2,6 +2,7 @@ package app.fide_go.service;
 
 import app.fide_go.model.Bussiness;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IBussinessService {
@@ -10,4 +11,5 @@ public interface IBussinessService {
     boolean delete(String id);
     Optional<Bussiness> findByBussinessName(String name);
     Optional<Bussiness> findById(String id);
+    List<Bussiness> getAllBussinesses();
 }

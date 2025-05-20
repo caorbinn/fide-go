@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -92,6 +93,14 @@ public class BussinessController {
         response = bussinessFounded.map(bussiness -> new ResponseEntity<>(bussiness, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
         return response;
+    }
+
+    /**
+     * @return ResponseEntity of Email object
+     */
+    @GetMapping("/getall")
+    public ResponseEntity<List<Bussiness>> getAllBussinesses() {
+        return new ResponseEntity<>(bussinessService.getAllBussinesses(), HttpStatus.OK);
     }
 
 }
