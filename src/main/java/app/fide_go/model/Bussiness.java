@@ -30,6 +30,7 @@ public class Bussiness {
     private String bussinessName;
     private String bussinessDescription;
     private String bussinessAddress;
+    private String urlImageBussiness;
     @DBRef
     private List<Offers> offers;
 
@@ -72,6 +73,16 @@ public class Bussiness {
     // Setter para el campo bussinessAddress
     public void setBussinessAddress(String bussinessAddress) {
         this.bussinessAddress = bussinessAddress;
+    }
+
+    // Getter para el campo bussinessAddress
+    public String getUrlImageBussiness() {
+        return urlImageBussiness;
+    }
+
+    // Setter para el campo bussinessAddress
+    public void setUrlImageBussiness(String urlImageBussiness) {
+        this.urlImageBussiness = urlImageBussiness;
     }
 
     // Getter para el campo offers

@@ -1,6 +1,5 @@
 package app.fide_go.controllers;
 
-
 import app.fide_go.model.*;
 import app.fide_go.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Controlador REST para gestionar usuarios en la aplicación.
+ * Permite operaciones CRUD y búsquedas por teléfono o email.
+ *
+ * REST controller for managing users in the application.
+ * Supports CRUD operations and searches by phone or email.
+ */
 @RestController
 @RequestMapping("fide_go/users")
 public class UserController {
+
     @Autowired
     private IUserService userService;
     @Autowired
@@ -25,28 +31,34 @@ public class UserController {
     public IEmailService emailService;
 
     /**
-     * @param user User Object to be inserted
-     * @return User object.
+     * Inserta un nuevo usuario en el sistema.
+     *
+     * Inserts a new user into the system.
+     *
+     * @param user Objeto User a insertar / User object to insert
+     * @return ResponseEntity con el usuario creado o error 400 / created user or 400 error
      */
     @PostMapping("/insert")
-    public ResponseEntity<User> insertUser(@RequestBody User user)
-    {
+    public ResponseEntity<User> insertUser(@RequestBody User user){
         ResponseEntity<User> response;
-        Optional<User> userInserted= userService.insert(user);
+        Optional<User> userInserted = userService.insert(user);
 
         if(userInserted.isPresent()){
-            response = new ResponseEntity<>(userInserted.get(),HttpStatus.CREATED);
-        }else{
+            response = new ResponseEntity<>(userInserted.get(), HttpStatus.CREATED);
+        } else {
             response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         return response;
     }
 
-
     /**
-     * @param user User object to be updated
-     * @return boolean, if user have been updated correctly return true
+     * Actualiza la información de un usuario.
+     *
+     * Updates user information.
+     *
+     * @param user Objeto User actualizado / Updated User object
+     * @return ResponseEntity con true si se actualizó correctamente / true if successfully updated
      */
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateUser(@RequestBody User user){
@@ -56,52 +68,59 @@ public class UserController {
         if(userFound.isPresent()){
             userService.update(user);
             response = new ResponseEntity<>(true, HttpStatus.OK);
-        }else{
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
     /**
-     * @param id String of Object to be deleted
-     * @return ResponseEntity of boolean
+     * Elimina un usuario por su ID.
+     *
+     * Deletes a user by their ID.
+     *
+     * @param id ID del usuario a eliminar / ID of the user to delete
+     * @return ResponseEntity con true si se eliminó correctamente / true if successfully deleted
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable String id ){
+    public ResponseEntity<Boolean> deleteUser(@PathVariable String id){
         ResponseEntity<Boolean> response;
-        Optional<User> userFound=userService.findById(id);
+        Optional<User> userFound = userService.findById(id);
 
         if(userFound.isPresent()){
-            profileService.delete(userFound.get().getProfile().getId());
+            profileService.delete(userFound.get().getProfile().getId()); // También se elimina el perfil asociado
             userService.delete(id);
             response = new ResponseEntity<>(true, HttpStatus.OK);
-        }else {
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
+
         return response;
     }
 
-
     /**
-     * @return List of all users
+     * Obtiene todos los usuarios del sistema.
+     *
+     * Retrieves all users in the system.
+     *
+     * @return Lista de objetos User / List of User objects
      */
     @GetMapping("/get_all")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> all = userService.findAll();
-        return new ResponseEntity<>(all,HttpStatus.OK);
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
-
-
-
-
-    //SEARCH USER BY DATA PROFILE
+    // ==== BÚSQUEDA DE USUARIO POR DATOS DE PERFIL / USER SEARCH BY PROFILE DATA ====
 
     /**
-     * @param phonenumber String representing the user's phone number to be found.
-     * @return User object
+     * Busca un usuario por su número de teléfono.
+     *
+     * Searches a user by their phone number.
+     *
+     * @param phonenumber Número de teléfono del usuario / User's phone number
+     * @return ResponseEntity con el usuario si se encuentra, 404 si no / user if found, 404 otherwise
      */
     @GetMapping("/get_by_phone/{phonenumber}")
     public ResponseEntity<User> getUserByPhoneNumber(@PathVariable String phonenumber){
@@ -112,18 +131,20 @@ public class UserController {
         if(phoneFound.isPresent()){
             user = userService.findByPhone(phoneFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
-        }
-        else{
+        } else {
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
     /**
-     * @param email String representing the user's email name to be found.
-     * @return User object
+     * Busca un usuario por su dirección de correo electrónico.
+     *
+     * Searches a user by their email address.
+     *
+     * @param email Dirección de email del usuario / User's email address
+     * @return ResponseEntity con el usuario si se encuentra, 404 si no / user if found, 404 otherwise
      */
     @GetMapping("/get_by_email/{email}")
     public ResponseEntity<User> getUserByEmailName(@PathVariable String email){
@@ -134,12 +155,10 @@ public class UserController {
         if(emailFound.isPresent()){
             user = userService.findByEmail(emailFound.get());
             response = new ResponseEntity<>(user.get(), HttpStatus.OK);
-        }
-        else{
+        } else {
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
-
 }

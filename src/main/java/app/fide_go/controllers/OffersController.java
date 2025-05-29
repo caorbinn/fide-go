@@ -9,15 +9,27 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * Controlador REST para gestionar las ofertas disponibles en la aplicación.
+ * Permite insertar, actualizar, eliminar y buscar ofertas por ID.
+ *
+ * REST controller for managing offers available in the application.
+ * Allows inserting, updating, deleting, and finding offers by ID.
+ */
 @RestController
 @RequestMapping("fide_go/offers")
 public class OffersController {
+
     @Autowired
     private IOffersService offersService;
 
     /**
-     * @param offers offers object to be insert
-     * @return boolean, if user have been updated correctly return true
+     * Inserta una nueva oferta si no existe ya una con el mismo ID.
+     *
+     * Inserts a new offer if there's no existing one with the same ID.
+     *
+     * @param offers Objeto de oferta a insertar / Offer object to insert
+     * @return ResponseEntity con true si se insertó correctamente, false si ya existe / true if inserted, false if already exists
      */
     @PostMapping("/insert")
     public ResponseEntity<Boolean> insertOffers(@RequestBody Offers offers){
@@ -27,18 +39,20 @@ public class OffersController {
         if(offersFounded.isEmpty()){
             offersService.insert(offers);
             response = new ResponseEntity<>(true, HttpStatus.OK);
-
-        }else{
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
     /**
-     * @param offers offers object to be updated
-     * @return boolean, if user have been updated correctly return true
+     * Actualiza una oferta existente.
+     *
+     * Updates an existing offer.
+     *
+     * @param offers Objeto oferta con los datos actualizados / Updated offer object
+     * @return ResponseEntity con true si se actualizó, false si falló o no existe / true if updated, false if failed or not found
      */
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateOffers(@RequestBody Offers offers){
@@ -48,50 +62,56 @@ public class OffersController {
         if(offersFounded.isPresent()){
             if(offersService.update(offers)){
                 response = new ResponseEntity<>(true, HttpStatus.OK);
-            }else{
+            } else {
                 response = new ResponseEntity<>(false, HttpStatus.BAD_GATEWAY);
             }
-            
-        }else{
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
     /**
-     * @param id String of Object to be deleted
-     * @return ResponseEntity of boolean
+     * Elimina una oferta por su ID.
+     *
+     * Deletes an offer by its ID.
+     *
+     * @param id ID de la oferta a eliminar / ID of the offer to delete
+     * @return ResponseEntity con true si se eliminó, false si no se encontró / true if deleted, false if not found
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteOffers(@PathVariable String id ){
+    public ResponseEntity<Boolean> deleteOffers(@PathVariable String id){
         ResponseEntity<Boolean> response;
-        Optional<Offers> offersFounded=offersService.findById(id);
+        Optional<Offers> offersFounded = offersService.findById(id);
 
         if(offersFounded.isPresent()){
             offersService.delete(id);
             response = new ResponseEntity<>(true, HttpStatus.OK);
-        }else {
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
+
         return response;
     }
 
-
     /**
-     * @param id String representing the email's id to be found.
-     * @return ResponseEntity of Email object
+     * Busca una oferta por su ID.
+     *
+     * Retrieves an offer by its ID.
+     *
+     * @param id ID de la oferta a buscar / ID of the offer to retrieve
+     * @return ResponseEntity con la oferta si se encuentra, 404 si no existe / Offer object if found, 404 if not
      */
     @GetMapping("/get")
-    public ResponseEntity<Offers> getOffersById(@RequestParam("id") String id)
-    {
+    public ResponseEntity<Offers> getOffersById(@RequestParam("id") String id) {
         ResponseEntity<Offers> response;
         Optional<Offers> offersFounded = offersService.findById(id);
 
-        response = offersFounded.map(email -> new ResponseEntity<>(email, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        response = offersFounded
+                .map(offer -> new ResponseEntity<>(offer, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
         return response;
     }
-
 }

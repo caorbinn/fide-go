@@ -8,17 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.Set;
 
+/**
+ * Controlador REST para gestionar operaciones relacionadas con direcciones de correo electrónico.
+ * Permite insertar, actualizar, eliminar y buscar objetos de tipo Email.
+ *
+ * REST Controller for managing operations related to email addresses.
+ * Allows inserting, updating, deleting, and retrieving Email objects.
+ */
 @RestController
 @RequestMapping("fide_go/emails")
 public class EmailController {
+
     @Autowired
     private IEmailService emailService;
 
     /**
-     * @param email Email Object to insert
-     * @return Boolean
+     * Inserta un nuevo email si es válido.
+     *
+     * Inserts a new email if it is valid.
+     *
+     * @param email Objeto Email a insertar / Email object to insert
+     * @return ResponseEntity con true si se insertó correctamente, false si ocurrió un error / true if inserted, false on error
      */
     @PostMapping("/insert")
     public ResponseEntity<Boolean> insertEmail(@RequestBody Email email){
@@ -27,18 +38,20 @@ public class EmailController {
 
         if(emailInserted.isPresent()){
             response = new ResponseEntity<>(true, HttpStatus.CREATED);
-        }else{
-            response = new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+        } else {
+            response = new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
 
         return response;
     }
 
-
-
     /**
-     * @param email Email object to be updated
-     * @return boolean, if user have been updated correctly return true
+     * Actualiza un email existente.
+     *
+     * Updates an existing email.
+     *
+     * @param email Objeto Email actualizado / Updated Email object
+     * @return ResponseEntity con true si se actualizó correctamente, false si no / true if updated, false otherwise
      */
     @PutMapping("/update")
     public ResponseEntity<Boolean> updateEmail(@RequestBody Email email){
@@ -48,50 +61,56 @@ public class EmailController {
         if(emailFounded.isPresent()){
             if(emailService.update(email)){
                 response = new ResponseEntity<>(true, HttpStatus.OK);
-            }else{
+            } else {
                 response = new ResponseEntity<>(false, HttpStatus.BAD_GATEWAY);
             }
-            
-        }else{
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
     /**
-     * @param id String of Object to be deleted
-     * @return ResponseEntity of boolean
+     * Elimina un email por su ID.
+     *
+     * Deletes an email by its ID.
+     *
+     * @param id ID del email a eliminar / ID of the email to delete
+     * @return ResponseEntity con true si se eliminó, false si no se encontró / true if deleted, false if not found
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteEmail(@PathVariable String id ){
+    public ResponseEntity<Boolean> deleteEmail(@PathVariable String id){
         ResponseEntity<Boolean> response;
-        Optional<Email> emailFounded=emailService.findById(id);
+        Optional<Email> emailFounded = emailService.findById(id);
 
         if(emailFounded.isPresent()){
             emailService.delete(id);
             response = new ResponseEntity<>(true, HttpStatus.OK);
-        }else {
+        } else {
             response = new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
+
         return response;
     }
 
-
     /**
-     * @param id String representing the email's id to be found.
-     * @return ResponseEntity of Email object
+     * Busca un email por su ID.
+     *
+     * Finds an email by its ID.
+     *
+     * @param id ID del email a buscar / ID of the email to find
+     * @return ResponseEntity con el objeto Email si se encuentra, o 404 si no / Email object if found, or 404 if not
      */
     @GetMapping("/get")
-    public ResponseEntity<Email> getEmailById(@RequestParam("id") String id)
-    {
+    public ResponseEntity<Email> getEmailById(@RequestParam("id") String id) {
         ResponseEntity<Email> response;
         Optional<Email> emailFounded = emailService.findById(id);
 
-        response = emailFounded.map(email -> new ResponseEntity<>(email, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        response = emailFounded
+                .map(email -> new ResponseEntity<>(email, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
         return response;
     }
-
 }
