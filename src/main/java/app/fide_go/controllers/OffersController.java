@@ -114,4 +114,9 @@ public class OffersController {
 
         return response;
     }
+
+    @GetMapping("/byBusiness")
+    public ResponseEntity<java.util.List<Offers>> getOffersByBusiness(@RequestParam("bussinessId") String bussinessId){
+        return new ResponseEntity<>(offersService.findByBussinessId(bussinessId), HttpStatus.OK);
+    }
 }

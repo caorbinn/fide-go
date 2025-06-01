@@ -4,6 +4,7 @@ import app.fide_go.errors.RollBackException;
 import app.fide_go.model.Bussiness;
 import app.fide_go.model.Offers;
 import app.fide_go.repository.OffersRepository;
+import app.fide_go.repository.BussinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class OffersServiceImpl implements IOffersService{
     @Autowired
     OffersRepository OffersDAO;
+    @Autowired
+    BussinessRepository bussinessDAO;
 
     /**
      * @param offers object to be inserted
@@ -26,7 +29,17 @@ public class OffersServiceImpl implements IOffersService{
         if(OffersDAO.findById(offers.getId()).isEmpty()){
             //I assign the id automatically.
             offers.setId(UUID.randomUUID().toString());
-            return Optional.of(OffersDAO.save(offers));
+            Offers saved = OffersDAO.save(offers);
+            if(saved.getBussinessId() != null){
+                bussinessDAO.findById(saved.getBussinessId()).ifPresent(b -> {
+                    if(b.getOffers() == null){
+                        b.setOffers(new java.util.ArrayList<>());
+                    }
+                    b.getOffers().add(saved);
+                    bussinessDAO.save(b);
+                });
+            }
+            return Optional.of(saved);
         }else{
             throw new RollBackException("The offers cannot be inserted into database because already exists");
         }
@@ -84,6 +97,11 @@ public class OffersServiceImpl implements IOffersService{
     @Override
     public Optional<Offers> findById(String id) {
         return OffersDAO.findById(id);
+    }
+
+    @Override
+    public java.util.List<Offers> findByBussinessId(String bussinessId) {
+        return OffersDAO.findByBussinessId(bussinessId);
     }
 
 }

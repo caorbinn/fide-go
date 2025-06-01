@@ -34,6 +34,7 @@ public class Offers {
     private String description;
     private String termsAndConditions;
     private int points;
+    private String bussinessId;
 
     // Getter para el campo id
     public String getId() {
@@ -83,5 +84,15 @@ public class Offers {
     // Setter para el campo points
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    // Getter para el campo bussinessId
+    public String getBussinessId() {
+        return bussinessId;
+    }
+
+    // Setter para el campo bussinessId
+    public void setBussinessId(String bussinessId) {
+        this.bussinessId = bussinessId;
     }
 }
