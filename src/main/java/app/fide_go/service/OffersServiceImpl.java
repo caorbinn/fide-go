@@ -22,7 +22,7 @@ public class OffersServiceImpl implements IOffersService{
     @Override
     public Optional<Offers> insert(Offers offers) {
 
-        //email.getId() == null &&
+
         if(OffersDAO.findById(offers.getId()).isEmpty()){
             //I assign the id automatically.
             offers.setId(UUID.randomUUID().toString());

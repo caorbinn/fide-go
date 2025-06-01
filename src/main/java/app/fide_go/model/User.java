@@ -40,6 +40,7 @@ public class User {
     @DBRef
     @Indexed(unique = true)
     private Profile profile;
+    private boolean admin ;
 
     // Getter para el campo id
     public String getId() {
@@ -90,4 +91,16 @@ public class User {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+
+    // Getter para el campo isAdmin
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    // Setter para el campo isAdmin
+    public void setIsAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+
 }

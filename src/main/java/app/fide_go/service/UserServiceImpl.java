@@ -60,6 +60,8 @@ public class UserServiceImpl implements IUserService {
                     user.setProfile(profileInserted.get());
                     user.setPhone(phoneInserted.get());
                     user.setEmail(emailInserted.get());
+                    //Definimos el atributo isAdmin
+                    user.setIsAdmin(false);
 
                     // Asignar ID al usuario si no lo tiene
                     if (user.getId() == null) {
