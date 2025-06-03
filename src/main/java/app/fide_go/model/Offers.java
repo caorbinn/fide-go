@@ -35,6 +35,7 @@ public class Offers {
     private String termsAndConditions;
     private int points;
     private String bussinessId;
+    private String urlImageOffer;
 
     // Getter para el campo id
     public String getId() {
@@ -94,5 +95,15 @@ public class Offers {
     // Setter para el campo bussinessId
     public void setBussinessId(String bussinessId) {
         this.bussinessId = bussinessId;
+    }
+
+    // Getter para el campo urlImageOffer
+    public String getUrlImageOffer() {
+        return urlImageOffer;
+    }
+
+    // Setter para el campo urlImageOffer
+    public void setUrlImageOffer(String urlImageOffer) {
+        this.urlImageOffer = urlImageOffer;
     }
 }

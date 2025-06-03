@@ -28,7 +28,7 @@ public class ImageUploadController {
             Path filepath = Paths.get(uploadDir, filename);
             Files.write(filepath, file.getBytes());
 
-            // Devuelve la URL relativa (ajustar si usas dominio público)
+            // Devuelve la URL relativa
             String fileUrl = "/uploads/images/" + filename;
             return ResponseEntity.ok(fileUrl);
 
