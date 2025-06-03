@@ -38,6 +38,7 @@ public class UserController {
      * @param user Objeto User a insertar / User object to insert
      * @return ResponseEntity con el usuario creado o error 400 / created user or 400 error
      */
+
     @PostMapping("/insert")
     public ResponseEntity<User> insertUser(@RequestBody User user){
         ResponseEntity<User> response;
