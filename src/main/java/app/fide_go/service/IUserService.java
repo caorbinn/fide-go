@@ -5,7 +5,6 @@ import app.fide_go.model.*;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface IUserService {
     Optional<User> insert(User user);
     boolean update(User user);
@@ -18,5 +17,5 @@ public interface IUserService {
 
     long registeredUsers();
 
-
+    Optional<String> redeemOffer(User user, Offers offer);
 }

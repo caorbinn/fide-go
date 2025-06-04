@@ -8,24 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-/**
- * Class that represents a user with the basic data for registration,
- * it is declared that the email must be unique.
- *
- * Clase que representa un oferta, que contiene un identificador unico, y ademas contiene el valor en puntos
- *
- * @version 1.0
- * @author Caleb Espinoza Valencia
- */
-
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-
 @Document(collection="offers")
-
 public class Offers {
     @Id
     @EqualsAndHashCode.Include
@@ -36,6 +24,8 @@ public class Offers {
     private int points;
     private String bussinessId;
     private String urlImageOffer;
+    // Code shown when the offer is redeemed
+    private String redeemCode;
 
     // Getter para el campo id
     public String getId() {
@@ -105,5 +95,15 @@ public class Offers {
     // Setter para el campo urlImageOffer
     public void setUrlImageOffer(String urlImageOffer) {
         this.urlImageOffer = urlImageOffer;
+    }
+
+    // Getter para el campo redeemCode
+    public String getRedeemCode() {
+        return redeemCode;
+    }
+
+    // Setter para el campo redeemCode
+    public void setRedeemCode(String redeemCode) {
+        this.redeemCode = redeemCode;
     }
 }
