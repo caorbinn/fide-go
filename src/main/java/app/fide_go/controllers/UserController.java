@@ -2,6 +2,7 @@ package app.fide_go.controllers;
 
 import app.fide_go.model.*;
 import app.fide_go.service.*;
+import app.fide_go.dto.RedeemOfferResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,6 +116,28 @@ public class UserController {
             Optional<String> code = userService.redeemOffer(userFound.get(), offer);
             if(code.isPresent()){
                 response = new ResponseEntity<>(code.get(), HttpStatus.OK);
+            }else{
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    @PostMapping("/redeemOfferWithPoints/{userId}")
+    public ResponseEntity<RedeemOfferResponse> redeemOfferWithPoints(@PathVariable String userId, @RequestBody Offers offer){
+        ResponseEntity<RedeemOfferResponse> response;
+        Optional<User> userFound = userService.findById(userId);
+
+        if(userFound.isPresent()){
+            Optional<String> code = userService.redeemOffer(userFound.get(), offer);
+            if(code.isPresent()){
+                Optional<Profile> profile = profileService.findById(userFound.get().getProfile().getId());
+                int points = profile.map(Profile::getPointsUser).orElse(0);
+                RedeemOfferResponse body = new RedeemOfferResponse(code.get(), points);
+                response = new ResponseEntity<>(body, HttpStatus.OK);
             }else{
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
